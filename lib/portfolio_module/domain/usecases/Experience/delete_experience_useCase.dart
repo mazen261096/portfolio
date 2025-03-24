@@ -8,12 +8,12 @@
 import 'package:dartz/dartz.dart';
 import 'package:portfolio/portfolio_module/domain/entities/contact_info.dart';
 import 'package:portfolio/portfolio_module/domain/entities/experience.dart';
-import 'package:portfolio/portfolio_module/domain/repository/portfolio_repository.dart';
+import 'package:portfolio/portfolio_module/domain/repository/base_portfolio_repository.dart';
 
-import '../../../../core/error/failure.dart';
+import '../../../../core/utils/failure.dart';
 
 class DeleteExperienceUseCase{
-  final PortfolioRepository portfolioRepository ;
+  final BasePortfolioRepository portfolioRepository ;
   DeleteExperienceUseCase (this.portfolioRepository);
 
   Future<Either<Failure,void>> execute(String id) async {

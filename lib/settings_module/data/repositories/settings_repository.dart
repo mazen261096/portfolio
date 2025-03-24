@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class SettingsRepository {
   // You can replace this with actual local storage like SharedPreferences
   Locale _locale = Locale('en');
-  ThemeData _theme = ThemeData.light();
+  ThemeData _theme = ThemeData.dark();
 
   Locale getCurrentLocale() {
     return _locale;

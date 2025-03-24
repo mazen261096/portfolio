@@ -4,15 +4,15 @@
 
 import 'package:dartz/dartz.dart';
 import 'package:portfolio/portfolio_module/domain/entities/contact_info.dart';
-import 'package:portfolio/portfolio_module/domain/repository/portfolio_repository.dart';
+import 'package:portfolio/portfolio_module/domain/repository/base_portfolio_repository.dart';
 
-import '../../../../core/error/failure.dart';
+import '../../../../core/utils/failure.dart';
 
 class UpdateContactInfoUseCase{
-  final PortfolioRepository portfolioRepository ;
+  final BasePortfolioRepository portfolioRepository ;
   UpdateContactInfoUseCase (this.portfolioRepository);
 
-  Future<Either<Failure,void>> execute(ContactInfo contactInfo) async {
-    return await portfolioRepository.updateContactInfo(contactInfo);
+  Future<Either<Failure,void>> execute(Map<String,dynamic> contactInfoMap) async {
+    return await portfolioRepository.updateContactInfo(contactInfoMap);
   }
 }

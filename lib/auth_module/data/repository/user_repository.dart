@@ -39,9 +39,9 @@ UserRepository(this.baseUserDataSource);
   Future<Either<ErrorManager, Null>> logout() async {
 
     try{
-      final result = await baseUserDataSource.logOut();
+       await baseUserDataSource.logOut();
 
-      return Right(result);
+      return Right(null);
     }on ErrorManager catch(error){
       return Left(error);
     }

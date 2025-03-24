@@ -1,15 +1,17 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../../core/services/service_locator.dart';
 
+import '../../../main.dart';
 import '../controller/settings_bloc.dart';
 import '../controller/settings_events.dart';
 import '../controller/settings_states.dart';
 import '../widgets/settings_toggle.dart';
 
 class SettingsScreen extends StatelessWidget {
-  SettingsScreen({super.key});
+  const SettingsScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -38,9 +40,15 @@ class SettingsScreen extends StatelessWidget {
                           child: Text('العربية'),
                         ),
                       ],
-                      onChanged: (Locale? newLocale) {
+                      onChanged: (Locale? newLocale) async {
                         if (newLocale != null) {
                           sl<SettingsBloc>().add(UpdateLanguageEvent(newLocale, context));
+
+                          final AuthResponse res = await supabase.auth.signInWithPassword(
+                            email: 'example1@email.com',
+                            password: 'example-password',
+                          );
+                          print('\n ${res.user!.id.toString()} \n');
                         }
                       },
                     ),

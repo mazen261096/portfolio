@@ -9,15 +9,15 @@ class PortfolioModel extends Portfolio {
     required super.contactInfo,
     required super.experience,
     required super.personalInfo,
-    required super.project,
+    required super.projects,
   });
 
   factory PortfolioModel.fromJson(Map<String, dynamic> json) {
     return PortfolioModel(
-      contactInfo: ContactInfoModel.fromJson(json['contactInfo']),
-      experience: ExperienceModel.fromJson(json['experience']),
+      contactInfo:(json['contactInfo'] as List<dynamic>).map((item)=>ContactInfoModel.fromJson(item)).toList(),
+      experience: (json['experience'] as List<dynamic>).map((item)=>ExperienceModel.fromJson(item)).toList(),
       personalInfo: PersonalInfoModel.fromJson(json['personalInfo']),
-      project: ProjectModel.fromJson(json['project']),
+      projects:(json['project'] as List<dynamic>).map((item)=>ProjectModel.fromJson(item)).toList() ,
     );
   }
 
@@ -26,7 +26,9 @@ class PortfolioModel extends Portfolio {
       'contactInfo': (contactInfo as ContactInfoModel).toJson(),
       'experience': (experience as ExperienceModel).toJson(),
       'personalInfo': (personalInfo as PersonalInfoModel).toJson(),
-      'project': (project as ProjectModel).toJson(),
+      'project': (projects as List<ProjectModel>).map((project)=>project.toJson()).toList(),
     };
   }
+
+
 }

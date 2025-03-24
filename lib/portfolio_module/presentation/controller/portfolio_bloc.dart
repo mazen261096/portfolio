@@ -2,7 +2,7 @@ import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:portfolio/portfolio_module/domain/usecases/ContactInfo/add_contact_info_useCase.dart';
 import 'package:portfolio/portfolio_module/domain/usecases/ContactInfo/delete_contact_info_useCase.dart';
-import 'package:portfolio/portfolio_module/domain/usecases/PersonalInfo/get_portfolio_data_useCase.dart';
+import 'package:portfolio/portfolio_module/domain/usecases/get_portfolio_data_useCase.dart';
 import 'package:portfolio/portfolio_module/domain/usecases/Project/update_project_useCase.dart';
 import '../../../core/utils/enums.dart';
 import '../../domain/usecases/ContactInfo/update_contact_info_useCase.dart';
@@ -16,9 +16,10 @@ import '../../domain/usecases/Project/add_project_useCase.dart';
 import '../../domain/usecases/Project/delete_project_useCase.dart';
 import 'portfolio_events.dart';
 import 'portfolio_states.dart';
-import '../../domain/repository/portfolio_repository.dart';
-
+import '../../domain/repository/base_portfolio_repository.dart';
+import 'package:flutter/material.dart';
 class PortfolioBloc extends Bloc<PortfolioEvent, PortfolioState> {
+  final ScrollController scrollController = ScrollController();
 
   final AddContactInfoUseCase addContactInfoUseCase;
   final UpdateContactInfoUseCase updateContactInfoUseCase;
@@ -53,6 +54,22 @@ class PortfolioBloc extends Bloc<PortfolioEvent, PortfolioState> {
       this.updateExperienceUseCase,
       this.updatePersonalInfoUseCase,
       ) : super(const PortfolioState()) {
+    scrollController.addListener(() {
+      add(ScrollUpdated((scrollController.offset / 200).clamp(0, 1)));
+    });
+
+    on<ScrollUpdated>((event, emit) {
+      emit(state.copyWith(appBarOpacity: event.offset));
+    });
+
+    on<ScrollToSection>((event, emit) {
+      Scrollable.ensureVisible(
+        event.key.currentContext!,
+        duration: Duration(milliseconds: 500),
+        curve: Curves.easeInOut,
+      );
+    });
+
     on<LoadPortfolioData>(_onLoadPortfolioData);
     on<AddPersonalInfo>(_onAddPersonalInfo);
     on<UpdatePersonalInfo>(_onUpdatePersonalInfo);

@@ -3,7 +3,9 @@ import '../../../core/utils/enums.dart';
 import '../../domain/entities/portfolio.dart';
 
 class PortfolioState extends Equatable {
+  final double appBarOpacity;
   final Portfolio? portfolio;
+
   final RequestState portfolioRequestState;
   final String portfolioMessage;
 
@@ -20,6 +22,7 @@ class PortfolioState extends Equatable {
   final String projectMessage;
 
   const PortfolioState({
+    this.appBarOpacity = 0,
     this.portfolio,
     this.portfolioRequestState = RequestState.loading,
     this.portfolioMessage = '',
@@ -34,6 +37,7 @@ class PortfolioState extends Equatable {
   });
 
   PortfolioState copyWith({
+    double? appBarOpacity,
     Portfolio? portfolio,
     RequestState? portfolioRequestState,
     String? portfolioMessage,
@@ -47,6 +51,7 @@ class PortfolioState extends Equatable {
     String? projectMessage,
   }) {
     return PortfolioState(
+      appBarOpacity: appBarOpacity ?? this.appBarOpacity,
       portfolio: portfolio ?? this.portfolio,
       portfolioRequestState: portfolioRequestState ?? this.portfolioRequestState,
       portfolioMessage: portfolioMessage ?? this.portfolioMessage,
@@ -63,6 +68,7 @@ class PortfolioState extends Equatable {
 
   @override
   List<Object?> get props => [
+    appBarOpacity,
     portfolio,
     portfolioRequestState,
     portfolioMessage,

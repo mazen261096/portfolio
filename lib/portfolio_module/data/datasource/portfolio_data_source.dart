@@ -1,64 +1,106 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import '../models/contact_info_model.dart';
-import '../models/experience_model.dart';
-import '../models/personal_info_model.dart';
-import '../models/project_model.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
-class PortfolioDataSource {
-  final FirebaseFirestore firestore;
+abstract class BaseDataSource {
+  Future<Map<String, dynamic>> getPortfolioData({required String userId});
+  Future<void> addOrUpdatePersonalInfo({required Map<String, dynamic> data});
+  Future<void> deletePersonalInfo({required String userId});
+  Future<void> addOrUpdateContactInfo({required Map<String, dynamic> data});
+  Future<void> deleteContactInfo({required String contactId});
+  Future<void> addOrUpdateExperience({required Map<String, dynamic> data});
+  Future<void> deleteExperience({required String experienceId});
+  Future<void> addOrUpdateProject({required Map<String, dynamic> data});
+  Future<void> deleteProject({required String projectId});
+}
 
-  PortfolioDataSource(this.firestore);
 
-  Future<Map<String, dynamic>> getPortfolioData() async {
-    final snapshot = await firestore.collection('portfolio').doc('1').get();
-    return snapshot.data() ?? {};
+class SupabaseDataSource implements BaseDataSource {
+  final SupabaseClient supabase = Supabase.instance.client;
+
+  @override
+  Future<Map<String, dynamic>> getPortfolioData({required String userId}) async {
+    try {
+      final response = await supabase
+          .from('users')
+          .select('*, personal_info(*), contact_info(*), experience(*), projects(*)')
+          .eq('id', userId)
+          .single();
+
+      if (response == null) throw Exception("No portfolio data found.");
+      return response;
+    } catch (e) {
+      throw Exception("Error fetching portfolio: ${e.toString()}");
+    }
   }
 
-  Future<void> addOrUpdatePersonalInfo(PersonalInfoModel personalInfo) async {
-    await firestore.collection('portfolio').doc('1').set({
-      'personalInfo': personalInfo.toJson(),
-    }, SetOptions(merge: true));
+  @override
+  Future<void> addOrUpdatePersonalInfo({required Map<String, dynamic> data}) async {
+    try {
+      await supabase.from('personal_info').upsert(data);
+    } catch (e) {
+      throw Exception("Error updating personal info: ${e.toString()}");
+    }
   }
 
-  Future<void> deletePersonalInfo() async {
-    await firestore.collection('portfolio').doc('1').update({
-      'personalInfo': FieldValue.delete(),
-    });
+  @override
+  Future<void> deletePersonalInfo({required String userId}) async {
+    try {
+      await supabase.from('personal_info').delete().eq('user_id', userId);
+    } catch (e) {
+      throw Exception("Error deleting personal info: ${e.toString()}");
+    }
   }
 
-  Future<void> addOrUpdateContactInfo(ContactInfoModel contactInfo) async {
-    await firestore.collection('portfolio').doc('1').set({
-      'contactInfo.${contactInfo.id}': contactInfo.toJson(),
-    }, SetOptions(merge: true));
+  @override
+  Future<void> addOrUpdateContactInfo({required Map<String, dynamic> data}) async {
+    try {
+      await supabase.from('contact_info').upsert(data);
+    } catch (e) {
+      throw Exception("Error adding/updating contact info: ${e.toString()}");
+    }
   }
 
-  Future<void> deleteContactInfo(String contactId) async {
-    await firestore.collection('portfolio').doc('1').update({
-      'contactInfo.$contactId': FieldValue.delete(),
-    });
+  @override
+  Future<void> deleteContactInfo({required String contactId}) async {
+    try {
+      await supabase.from('contact_info').delete().eq('id', contactId);
+    } catch (e) {
+      throw Exception("Error deleting contact info: ${e.toString()}");
+    }
   }
 
-  Future<void> addOrUpdateExperience(ExperienceModel experience) async {
-    await firestore.collection('portfolio').doc('1').set({
-      'experience.${experience.id}': experience.toJson(),
-    }, SetOptions(merge: true));
+  @override
+  Future<void> addOrUpdateExperience({required Map<String, dynamic> data}) async {
+    try {
+      await supabase.from('experience').upsert(data);
+    } catch (e) {
+      throw Exception("Error adding/updating experience: ${e.toString()}");
+    }
   }
 
-  Future<void> deleteExperience(String experienceId) async {
-    await firestore.collection('portfolio').doc('1').update({
-      'experience.$experienceId': FieldValue.delete(),
-    });
+  @override
+  Future<void> deleteExperience({required String experienceId}) async {
+    try {
+      await supabase.from('experience').delete().eq('id', experienceId);
+    } catch (e) {
+      throw Exception("Error deleting experience: ${e.toString()}");
+    }
   }
 
-  Future<void> addOrUpdateProject(ProjectModel project) async {
-    await firestore.collection('portfolio').doc('1').set({
-      'projects.${project.id}': project.toJson(),
-    }, SetOptions(merge: true));
+  @override
+  Future<void> addOrUpdateProject({required Map<String, dynamic> data}) async {
+    try {
+      await supabase.from('projects').upsert(data);
+    } catch (e) {
+      throw Exception("Error adding/updating project: ${e.toString()}");
+    }
   }
 
-  Future<void> deleteProject(String projectId) async {
-    await firestore.collection('portfolio').doc('1').update({
-      'projects.$projectId': FieldValue.delete(),
-    });
+  @override
+  Future<void> deleteProject({required String projectId}) async {
+    try {
+      await supabase.from('projects').delete().eq('id', projectId);
+    } catch (e) {
+      throw Exception("Error deleting project: ${e.toString()}");
+    }
   }
 }

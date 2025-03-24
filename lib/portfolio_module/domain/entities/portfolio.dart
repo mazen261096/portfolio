@@ -4,11 +4,11 @@ import 'package:portfolio/portfolio_module/domain/entities/personal_info.dart';
 import 'package:portfolio/portfolio_module/domain/entities/project.dart';
 
 class Portfolio{
-  ContactInfo contactInfo ;
-  Experience experience ;
+  List<ContactInfo> contactInfo ;
+  List<Experience> experience ;
   PersonalInfo personalInfo ;
-  Project project ;
+  List<Project> projects ;
 
-  Portfolio({required this.contactInfo,required this.experience,required this.personalInfo,required this.project});
+  Portfolio({required this.contactInfo,required this.experience,required this.personalInfo,required this.projects});
 
 }

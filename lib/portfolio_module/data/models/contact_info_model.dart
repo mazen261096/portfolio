@@ -26,12 +26,5 @@ class ContactInfoModel extends ContactInfo {
     };
   }
 
-  static ContactInfoModel fromEntity(ContactInfo entity) {
-    return ContactInfoModel(
-      id: entity.id,
-      name: entity.name,
-      logoUrl: entity.logoUrl,
-      linkOrPhone: entity.linkOrPhone,
-    );
-  }
+
 }

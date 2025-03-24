@@ -1,79 +1,56 @@
-
-
-
-
-
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-
-import '../../../core/network/firebase_constance.dart';
-import '../../../core/utils/enums.dart';
+import '../../../core/services/supabase_auth_service.dart';
 import '../../../core/utils/error_manager.dart';
 import '../models/user_model.dart';
+
+
 abstract class BaseUserDataSource {
-  Future<AppUserModel> registerByEmail({required String email,required String password,required String name});
-  Future<AppUserModel> loginByEmail({required String email,required String password});
-  Future<Null> logOut();
+  Future<AppUserModel> registerByEmail({required String email, required String password, required String name});
+  Future<AppUserModel> loginByEmail({required String email, required String password});
+  Future<void> logOut();
 }
 
-class UserDataSource implements BaseUserDataSource{
 
+class UserDataSource implements BaseUserDataSource {
+  final SupabaseAuthService authService;
+
+  UserDataSource(this.authService);
+
+  /// ✅ **Register a new user and return `AppUserModel`**
   @override
-  Future<AppUserModel> registerByEmail({required String email, required String password,required String name}) async{
-try{
-
-  UserCredential userCredential = await FirebaseConstance.auth.createUserWithEmailAndPassword(email: email, password: password);
-
-
-  Map<String,dynamic> userData = {
-  'id':userCredential.user!.uid,
-  'userType' : 'user',
-  'name':name,
-  'photoURL':userCredential.user!.photoURL,
-  'token':userCredential.credential?.token,
-  'accessToken':userCredential.credential?.accessToken,
-  'providerId':userCredential.credential?.providerId,
-  'signInMethod':userCredential.credential?.signInMethod,
-  'refreshToken':userCredential.user!.refreshToken,
-  'email':userCredential.user!.email,
-  'emailVerified':userCredential.user!.emailVerified,
-  'isAnonymous':userCredential.user!.isAnonymous,
-  'phoneNumber':userCredential.user!.phoneNumber,
-};
-
-  await FirebaseConstance.fireStore.collection(FirebaseConstance.usersCollection).doc(userCredential.user!.uid).set(userData,SetOptions(merge: true));
-
-  return  AppUserModel.fromJson(userData);
-
-}catch(error){
-  throw ErrorManager(error.toString());
-}
-  }
-
-
-  @override
-  Future<AppUserModel> loginByEmail({required String email, required String password}) async {
-    try{
-
-      UserCredential userCredential=await  FirebaseConstance.auth.signInWithEmailAndPassword(email: email, password: password);
-      DocumentSnapshot<Map<String, dynamic>> document = await FirebaseConstance.fireStore.collection(FirebaseConstance.usersCollection).doc(userCredential.user!.uid).get();
-      return AppUserModel.fromJson(document.data()!);
-
-    }on FirebaseAuthException catch (error){
-
-      throw ErrorManager(error.toString());
-
+  Future<AppUserModel> registerByEmail({
+    required String email,
+    required String password,
+    required String name,
+  }) async {
+    try {
+      final userData = await authService.registerUser(email: email, password: password, userName: name);
+      return AppUserModel.fromJson(userData);
+    } catch (error) {
+      throw ErrorManager("Registration Error: $error");
     }
   }
 
+  /// ✅ **Log in a user and return `AppUserModel`**
   @override
-  Future<Null> logOut() async {
-   try{
-     await FirebaseConstance.auth.signOut();
-     return null;
-   }catch (error) {
-     throw ErrorManager(error.toString());
-   }
+  Future<AppUserModel> loginByEmail({
+    required String email,
+    required String password,
+  }) async {
+    try {
+      final userData = await authService.loginUser(email: email, password: password);
+      return AppUserModel.fromJson(userData);
+    } catch (error) {
+      throw ErrorManager("Login Error: $error");
+    }
   }
 
+  /// ✅ **Log out user from Supabase**
+  @override
+  Future<void> logOut() async {
+    try {
+      await authService.supabase.auth.signOut();
+    } catch (error) {
+      throw ErrorManager("Logout Error: $error");
+    }
+  }
 }

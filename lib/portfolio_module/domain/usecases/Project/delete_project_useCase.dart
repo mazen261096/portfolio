@@ -6,11 +6,11 @@
 // Use case for: delete_contact_info_useCase.dart
 
 import 'package:dartz/dartz.dart';
-import 'package:portfolio/portfolio_module/domain/repository/portfolio_repository.dart';
-import '../../../../core/error/failure.dart';
+import 'package:portfolio/portfolio_module/domain/repository/base_portfolio_repository.dart';
+import '../../../../core/utils/failure.dart';
 
 class DeleteProjectUseCase{
-  final PortfolioRepository portfolioRepository ;
+  final BasePortfolioRepository portfolioRepository ;
   DeleteProjectUseCase (this.portfolioRepository);
 
   Future<Either<Failure,void>> execute(String id) async {

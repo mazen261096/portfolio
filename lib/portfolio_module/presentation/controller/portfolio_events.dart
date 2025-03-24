@@ -1,21 +1,28 @@
-// portfolio_events.dart
-import '../../domain/entities/contact_info.dart';
-import '../../domain/entities/experience.dart';
-import '../../domain/entities/personal_info.dart';
-import '../../domain/entities/project.dart';
+
+import 'package:flutter/material.dart';
 
 abstract class PortfolioEvent {}
+
+class ScrollUpdated extends PortfolioEvent {
+  final double offset;
+  ScrollUpdated(this.offset);
+}
+
+class ScrollToSection extends PortfolioEvent {
+  final GlobalKey key;
+  ScrollToSection(this.key);
+}
 
 class LoadPortfolioData extends PortfolioEvent {}
 
 // Personal Info Events
 class AddPersonalInfo extends PortfolioEvent {
-  final PersonalInfo personalInfo;
+  final Map<String,dynamic> personalInfo;
   AddPersonalInfo(this.personalInfo);
 }
 
 class UpdatePersonalInfo extends PortfolioEvent {
-  final PersonalInfo personalInfo;
+  final Map<String,dynamic> personalInfo;
   UpdatePersonalInfo(this.personalInfo);
 }
 
@@ -26,12 +33,12 @@ class DeletePersonalInfo extends PortfolioEvent {
 
 // Contact Info Events
 class AddContactInfo extends PortfolioEvent {
-  final ContactInfo contactInfo;
+  final Map<String,dynamic> contactInfo;
   AddContactInfo(this.contactInfo);
 }
 
 class UpdateContactInfo extends PortfolioEvent {
-  final ContactInfo contactInfo;
+  final Map<String,dynamic> contactInfo;
   UpdateContactInfo(this.contactInfo);
 }
 
@@ -42,12 +49,12 @@ class DeleteContactInfo extends PortfolioEvent {
 
 // Experience Events
 class AddExperience extends PortfolioEvent {
-  final Experience experience;
+  final Map<String,dynamic> experience;
   AddExperience(this.experience);
 }
 
 class UpdateExperience extends PortfolioEvent {
-  final Experience experience;
+  final Map<String,dynamic> experience;
   UpdateExperience(this.experience);
 }
 
@@ -58,12 +65,12 @@ class DeleteExperience extends PortfolioEvent {
 
 // Project Events
 class AddProject extends PortfolioEvent {
-  final Project project;
+  final Map<String,dynamic> project;
   AddProject(this.project);
 }
 
 class UpdateProject extends PortfolioEvent {
-  final Project project;
+  final Map<String,dynamic> project;
   UpdateProject(this.project);
 }
 
@@ -71,3 +78,5 @@ class DeleteProject extends PortfolioEvent {
   final String projectId;
   DeleteProject(this.projectId);
 }
+
+

@@ -1,6 +1,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import '../../../../core/services/service_locator.dart';
 import '../../../../core/utils/assets_manager.dart';
 import '../../../../core/utils/enums.dart';
@@ -174,10 +175,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       const SizedBox(height: 16),
                       TextButton(
                         onPressed: () {
-                          Navigator.pushReplacementNamed(
-                            context,
-                            Routes.login,
-                          );
+                          GoRouter.of(context).replace(Routes.loginRoute);
+
                         },
                         child: const Text(
                           "Already have an account? Login",

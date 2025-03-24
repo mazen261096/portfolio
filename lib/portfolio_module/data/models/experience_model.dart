@@ -35,15 +35,5 @@ class ExperienceModel extends Experience {
     };
   }
 
-  static ExperienceModel fromEntity(Experience entity) {
-    return ExperienceModel(
-      id: entity.id,
-      companyName: entity.companyName,
-      logoUrl: entity.logoUrl,
-      role: entity.role,
-      description: entity.description,
-      startDate: entity.startDate,
-      endDate: entity.endDate,
-    );
-  }
+
 }

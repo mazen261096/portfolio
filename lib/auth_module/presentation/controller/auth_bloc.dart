@@ -4,6 +4,7 @@ import 'package:bloc/bloc.dart';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import '../../../core/utils/constant_widgets.dart';
 import '../../../core/utils/enums.dart';
 import '../../../core/utils/routes_manager.dart';
@@ -46,7 +47,7 @@ class AuthBloc extends Bloc<AuthEvents, AuthStates> {
     }, (r) {
 
       emit(state.copyWith(appUser: r, appUserRequestState: RequestState.loaded));
-      Navigator.pushReplacementNamed(event.context, Routes.homeRoute);
+      GoRouter.of(event.context).replace('/${r.userName}');
 
 
     });
@@ -68,7 +69,7 @@ class AuthBloc extends Bloc<AuthEvents, AuthStates> {
     }, (r) {
 
       emit(state.copyWith(appUser: r, appUserRequestState: RequestState.loaded));
-      Navigator.pushReplacementNamed(event.context, Routes.homeRoute);
+      GoRouter.of(event.context).replace('/${r.userName}');
 
     });
   }
@@ -86,7 +87,7 @@ class AuthBloc extends Bloc<AuthEvents, AuthStates> {
           appUserErrorMessage: l.message));
     }, (r){
       emit(const AuthStates(appUser: null,appUserRequestState:RequestState.loaded));
-      Navigator.pushReplacementNamed(event.context, Routes.login);
+      Navigator.pushReplacementNamed(event.context, Routes.loginRoute);
 
 
     });

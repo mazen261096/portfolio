@@ -9,16 +9,16 @@
 import 'package:dartz/dartz.dart';
 import 'package:portfolio/portfolio_module/domain/entities/contact_info.dart';
 import 'package:portfolio/portfolio_module/domain/entities/experience.dart';
-import 'package:portfolio/portfolio_module/domain/repository/portfolio_repository.dart';
+import 'package:portfolio/portfolio_module/domain/repository/base_portfolio_repository.dart';
 
-import '../../../../core/error/failure.dart';
+import '../../../../core/utils/failure.dart';
 import '../../entities/project.dart';
 
 class UpdateProjectUseCase{
-  final PortfolioRepository portfolioRepository ;
+  final BasePortfolioRepository portfolioRepository ;
   UpdateProjectUseCase (this.portfolioRepository);
 
-  Future<Either<Failure,void>> execute(Project project) async {
-    return await portfolioRepository.updateProject(project);
+  Future<Either<Failure,void>> execute(Map<String,dynamic> projectMap) async {
+    return await portfolioRepository.updateProject(projectMap);
   }
 }// Use case for: update_project_useCase.dart
